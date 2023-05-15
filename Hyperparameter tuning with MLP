@@ -1,0 +1,42 @@
+# Hyperparameter optimization with MLP
+
+# Plz directly copy this part of code into the hyperparameter optimization part
+
+from sklearn.neural_network import MLPClassifier
+mlp = MLPClassifier(random_state=42)
+
+param_grid_mlp = {
+    'hidden_layer_sizes': [(50,),(100,), (50, 50), (100, 50),(100,50,30)],
+    'activation': ['relu', 'tanh'],
+    'solver': ['adam', 'sgd'],
+    'learning_rate': ['constant', 'adaptive'],
+}
+
+# hidden_layer_sizes determines the architecture of the MLP model. 
+# each element represents the number of neurons in a specific hidden layer.here we define 1,2,3 layers respectively
+# activation function, we test two common function:
+# 'tanh': The hyperbolic tangent function, f(x) = tanh(x)
+# 'relu': The rectified linear unit function, f(x) = max(0, x)
+# solver parameter specifies the algorithm used to optimize the weights of the MLP model. 
+# learning rate determines how the learning rate is updated during training. The learning rate controls the step size in weight updates. 
+
+start = time.time()
+
+grid_search = GridSearchCV(mlp, param_grid_mlp, cv=5)
+grid_search.fit(X_train, y_train)
+
+best_params = grid_search.best_params_
+
+print("Best Hyperparameters of MLP:", best_params)
+print("Best Accuracy of MLP:", grid_search.best_score_)
+
+end = time.time()
+print(f"Computation time: {end-start}")
+
+
+'''
+Output
+Best Hyperparameters of MLP: {'activation': 'tanh', 'hidden_layer_sizes': (100, 50), 'learning_rate': 'constant', 'solver': 'adam'}
+Best Accuracy of MLP: 0.9980499999999999
+Computation time: 1412.4333038330078
+'''
